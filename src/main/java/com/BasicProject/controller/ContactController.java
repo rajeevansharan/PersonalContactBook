@@ -1,22 +1,20 @@
 package com.BasicProject.controller;
-
-import com.BasicProject.exception.ContactNotFoundException;
 import com.BasicProject.model.Contact;
 import com.BasicProject.service.ContactService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 @Controller
-@RequiredArgsConstructor
 public class ContactController {
 
     private final ContactService contactService;
+    public ContactController(ContactService contactService)
+    {
+        this.contactService = contactService;
+    }
 
     /**
      * Home page - List all contacts
