@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Book - Contacts</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-container {
+            position: relative;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 50px 12px 20px;
+            border: 2px solid #e1e8ed;
+            border-radius: 50px;
+            font-size: 16px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: #2980b9;
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .error-message {
+            background: #e74c3c;
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e1e8ed;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .contact-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .contact-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .contact-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn {
+            background: #f39c12;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #e67e22;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #555;
+        }
+
+        .info-icon {
+            width: 20px;
+            color: #3498db;
+        }
+
+        .contact-meta {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .page-btn {
+            padding: 10px 15px;
+            border: 2px solid #e1e8ed;
+            background: white;
+            color: #555;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .page-btn:hover:not(.disabled) {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .page-btn.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .page-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-info {
+            margin: 0 1rem;
+            color: #666;
+        }
+
+        .no-contacts {
+            text-align: center;
+            padding: 3rem;
+            color: #7f8c8d;
+        }
+
+        .no-contacts i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 1.5rem 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-container {
+                min-width: auto;
+            }
+
+            .contacts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .pagination {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <h1><i class="fas fa-address-book"></i> Contact Book</h1>
+        <p>Manage your contacts efficiently</p>
+    </header>
+
+    <main class="content">
+        <!-- Error Message -->
+        <div th:if="${errorMessage}" class="error-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span th:text="${errorMessage}">Error loading contacts</span>
+        </div>
+
+        <!-- Top Bar with Search and Add Button -->
+        <div class="top-bar">
+            <form class="search-container" method="get" action="/">
+                <input
+                        type="text"
+                        name="search"
+                        class="search-input"
+                        placeholder="Search contacts by name, email, or phone..."
+                        th:value="${search}"
+                />
+                <button type="submit" class="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+            <a href="/contacts/add" class="add-btn">
+                <i class="fas fa-plus"></i>
+                Add Contact
+            </a>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats" th:if="${totalContacts != null}">
+            <div class="stat-item">
+                <div class="stat-number" th:text="${totalContacts}">0</div>
+                <div class="stat-label">Total Contacts</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" th:text="${currentPage + 1}">1</div>
+                <div class="stat-label">Current Page</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" th:text="${totalPages}">1</div>
+                <div class="stat-label">Total Pages</div>
+            </div>
+        </div>
+
+        <!-- Contacts Grid -->
+        <div th:if="${contacts != null and !contacts.empty}" class="contacts-grid">
+            <div th:each="contact : ${contacts}" class="contact-card">
+                <div class="contact-header">
+                    <h3 class="contact-name" th:text="${contact.name}">John Doe</h3>
+                    <div class="contact-actions">
+                        <a th:href="@{/contacts/edit/{id}(id=${contact.id})}" class="action-btn edit-btn">
+                            <i class="fas fa-edit"></i>
+                            Edit
+                        </a>
+                        <button onclick="confirmDelete(this)"
+                                th:data-id="${contact.id}"
+                                th:data-name="${contact.name}"
+                                class="action-btn delete-btn">
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </button>
+                    </div>
+                </div>
+
+                <div class="contact-info">
+                    <div class="info-item">
+                        <i class="fas fa-envelope info-icon"></i>
+                        <span th:text="${contact.email}">john.doe@example.com</span>
+                    </div>
+                    <div class="info-item" th:if="${contact.phone}">
+                        <i class="fas fa-phone info-icon"></i>
+                        <span th:text="${contact.phone}">+1 234 567 8900</span>
+                    </div>
+                    <div class="info-item" th:if="${contact.address}">
+                        <i class="fas fa-map-marker-alt info-icon"></i>
+                        <span th:text="${contact.address}">123 Main St, City, State</span>
+                    </div>
+                </div>
+
+                <div class="contact-meta" th:if="${contact.createdAt}">
+                    <i class="fas fa-calendar-alt"></i>
+                    Added: <span th:text="${#temporals.format(contact.createdAt, 'MMM dd, yyyy')}">Jan 01, 2024</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- No Contacts Message -->
+        <div th:if="${contacts == null or contacts.empty}" class="no-contacts">
+            <i class="fas fa-address-book"></i>
+            <h3 th:if="${search}">No contacts found matching your search</h3>
+            <h3 th:unless="${search}">No contacts found</h3>
+            <p th:if="${search}">Try adjusting your search terms or <a href="/">view all contacts</a></p>
+            <p th:unless="${search}">Get started by adding your first contact!</p>
+        </div>
+
+        <!-- Pagination -->
+        <div th:if="${totalPages > 1}" class="pagination">
+            <!-- Previous Button -->
+            <a th:if="${hasPrevious}"
+               th:href="@{/(page=${currentPage - 1}, size=10, search=${search})}"
+               class="page-btn">
+                <i class="fas fa-chevron-left"></i> Previous
+            </a>
+            <span th:unless="${hasPrevious}" class="page-btn disabled">
+                    <i class="fas fa-chevron-left"></i> Previous
+                </span>
+
+            <!-- Page Info -->
+            <span class="page-info">
+                    Page <span th:text="${currentPage + 1}">1</span> of <span th:text="${totalPages}">1</span>
+                </span>
+
+            <!-- Next Button -->
+            <a th:if="${hasNext}"
+               th:href="@{/(page=${currentPage + 1}, size=10, search=${search})}"
+               class="page-btn">
+                Next <i class="fas fa-chevron-right"></i>
+            </a>
+            <span th:unless="${hasNext}" class="page-btn disabled">
+                    Next <i class="fas fa-chevron-right"></i>
+                </span>
+        </div>
+    </main>
+</div>
+
+<script>
+    function confirmDelete(button) {
+        const contactId = button.getAttribute('data-id');
+        const contactName = button.getAttribute('data-name');
+
+        if (confirm(`Are you sure you want to delete "${contactName}"? This action cannot be undone.`)) {
+            // Create form and submit for DELETE request
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/contacts/delete/${contactId}`;
+
+            // Add CSRF token if needed (uncomment if using Spring Security)
+            // const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            // const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+            // form.innerHTML = `<input type="hidden" name="${csrfHeader}" value="${csrfToken}">`;
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+
+    // Auto-submit search on Enter key
+    document.querySelector('.search-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            this.closest('form').submit();
+        }
+    });
+
+    // Add loading state to search button
+    document.querySelector('.search-btn').addEventListener('click', function() {
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    });
+</script>
+</body>
+</html>

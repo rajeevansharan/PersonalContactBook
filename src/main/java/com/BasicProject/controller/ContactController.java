@@ -26,6 +26,8 @@ public class ContactController {
             @RequestParam(name = "size", defaultValue = "10") int size,
             Model model) {
 
+
+
         try {
             Page<Contact> contactPage;
 
