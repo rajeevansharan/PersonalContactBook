@@ -1,5 +1,6 @@
 package com.BasicProject.controller;
 
+import com.BasicProject.exception.ContactNotFoundException;
 import com.BasicProject.model.Contact;
 import com.BasicProject.service.ContactService;
 import org.springframework.data.domain.Page;
@@ -71,5 +72,25 @@ public class ContactController {
                     .body(Map.of("errorMessage", "An unexpected error occurred while saving the contact."));
         }
     }
+
+
+    /**
+     * Delete contact (REST API style)
+     */
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteContact(@PathVariable Long id) {
+        try {
+            contactService.deleteContact(id);
+            return ResponseEntity.ok("Contact deleted successfully!");
+
+        } catch (ContactNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An unexpected error occurred while deleting the contact.");
+        }
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package com.BasicProject.service;
 
+import com.BasicProject.exception.ContactNotFoundException;
 import com.BasicProject.model.Contact;
 import com.BasicProject.repository.ContactRepository;
 import org.springframework.data.domain.Page;
@@ -60,5 +61,17 @@ public class ContactService {
         }
 
         return contactRepository.save(contact);
+    }
+
+
+    /**
+     * Delete contact by ID
+     */
+    public void deleteContact(Long id) {
+        if (!contactRepository.existsById(id)) {
+            throw new ContactNotFoundException("Contact not found with id: " + id);
+        }
+
+        contactRepository.deleteById(id);
     }
 }
