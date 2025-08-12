@@ -5,104 +5,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add New Contact</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Your original CSS kept exactly the same */
-        * {margin:0;padding:0;box-sizing:border-box;}
-        body {font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;padding:20px;}
-        .container {max-width:800px;margin:0 auto;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,0.1);overflow:hidden;}
-        .header {background:linear-gradient(135deg,#2c3e50,#3498db);padding:30px 40px;color:white;position:relative;overflow:hidden;}
-        .header::before {content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,0.1) 0%,transparent 70%);animation:pulse 4s ease-in-out infinite;}
-        @keyframes pulse {0%,100%{transform:scale(1);opacity:0.3;}50%{transform:scale(1.1);opacity:0.1;}}
-        .header h1 {font-size:2.2rem;font-weight:300;display:flex;align-items:center;gap:15px;position:relative;z-index:1;}
-        .header-icon {font-size:2rem;animation:bounce 2s ease-in-out infinite;}
-        @keyframes bounce {0%,20%,50%,80%,100%{transform:translateY(0);}40%{transform:translateY(-10px);}60%{transform:translateY(-5px);}}
-        .back-link {display:inline-flex;align-items:center;gap:8px;color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;margin-bottom:15px;transition:all 0.3s ease;}
-        .back-link:hover {color:white;transform:translateX(-5px);}
-        .form-section {padding:40px;}
-        .contact-form {display:flex;flex-direction:column;gap:25px;}
-        .form-group {position:relative;opacity:0;transform:translateY(20px);animation:slideInUp 0.6s ease forwards;}
-        .form-group:nth-child(1){animation-delay:0.1s;}
-        .form-group:nth-child(2){animation-delay:0.2s;}
-        .form-group:nth-child(3){animation-delay:0.3s;}
-        .form-group:nth-child(4){animation-delay:0.4s;}
-        @keyframes slideInUp {to{opacity:1;transform:translateY(0);}}
-        .form-label {display:block;margin-bottom:8px;color:#2c3e50;font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;}
-        .form-input {width:100%;padding:16px 20px 16px 50px;border:2px solid #e1e8ed;border-radius:12px;font-size:16px;background:white;transition:all 0.3s ease;outline:none;}
-        .form-input:focus {border-color:#3498db;box-shadow:0 0 0 3px rgba(52,152,219,0.1);transform:translateY(-2px);}
-        .form-input:required:valid {border-color:#27ae60;}
-        .form-icon {position:absolute;left:18px;top:50%;transform:translateY(-50%);color:#95a5a6;font-size:18px;transition:all 0.3s ease;}
-        .form-group:focus-within .form-icon {color:#3498db;}
-        .textarea {min-height:120px;resize:vertical;font-family:inherit;line-height:1.5;}
-        .form-actions {display:flex;gap:15px;justify-content:center;flex-wrap:wrap;margin-top:30px;}
-        .btn {padding:16px 32px;border:none;border-radius:50px;font-size:16px;font-weight:600;cursor:pointer;transition:all 0.3s ease;display:flex;align-items:center;gap:10px;text-decoration:none;text-align:center;min-width:150px;justify-content:center;}
-        .btn-primary {background:linear-gradient(135deg,#3498db,#2980b9);color:white;}
-        .btn-primary:hover {transform:translateY(-2px);box-shadow:0 10px 20px rgba(52,152,219,0.3);background:linear-gradient(135deg,#2980b9,#3498db);}
-        .btn-secondary {background:linear-gradient(135deg,#95a5a6,#7f8c8d);color:white;}
-        .btn-secondary:hover {transform:translateY(-2px);box-shadow:0 10px 20px rgba(149,165,166,0.3);background:linear-gradient(135deg,#7f8c8d,#95a5a6);}
-        .btn:disabled {opacity:0.6;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
-        .form-hint {font-size:12px;color:#7f8c8d;margin-top:5px;display:flex;align-items:center;gap:5px;}
-        .success-message {background:linear-gradient(135deg,#27ae60,#2ecc71);color:white;padding:15px 20px;border-radius:10px;margin-bottom:20px;display:none;align-items:center;gap:10px;}
-        .loading {display:inline-block;width:20px;height:20px;border:3px solid #f3f3f3;border-top:3px solid #3498db;border-radius:50%;animation:spin 1s linear infinite;}
-        @keyframes spin {0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
-        @media (max-width:768px){.container{margin:10px;border-radius:15px;}.header{padding:20px;}.header h1{font-size:1.8rem;}.form-section{padding:20px;}.form-actions{flex-direction:column;align-items:center;}.btn{width:100%;max-width:300px;}}
+        /* Custom animations that Tailwind doesn't have out of the box */
+        @keyframes pulse-bg {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.1; }
+        }
+        @keyframes bounce-custom {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        @keyframes slideInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes spin-custom {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .animate-pulse-bg { animation: pulse-bg 4s ease-in-out infinite; }
+        .animate-bounce-custom { animation: bounce-custom 2s ease-in-out infinite; }
+        .animate-slide-in { opacity: 0; transform: translateY(20px); animation: slideInUp 0.6s ease forwards; }
+        .loading { display:inline-block; width:20px; height:20px; border:3px solid #f3f3f3; border-top:3px solid #3498db; border-radius:50%; animation:spin-custom 1s linear infinite; }
     </style>
 </head>
-<body>
-<div class="container">
+<body class="font-sans bg-gradient-to-br from-indigo-400 to-purple-600 min-h-screen p-5">
+<div class="max-w-3xl mx-auto bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden">
     <!-- Header -->
-    <div class="header">
-        <a href="/contacts" class="back-link"><i class="fas fa-arrow-left"></i> Back to Contacts</a>
-        <h1><i class="fas fa-user-plus header-icon"></i> Add New Contact</h1>
+    <div class="relative bg-gradient-to-br from-gray-800 to-blue-600 p-8 text-white overflow-hidden">
+        <a href="/contacts" class="inline-flex items-center gap-2 text-white/80 hover:text-white text-sm mb-4 transition-transform duration-300 hover:-translate-x-1">
+            <i class="fas fa-arrow-left"></i> Back to Contacts
+        </a>
+        <h1 class="text-3xl font-light flex items-center gap-4 relative z-10">
+            <i class="fas fa-user-plus text-2xl animate-bounce-custom"></i> Add New Contact
+        </h1>
+        <div class="absolute top-[-50%] right-[-50%] w-[200%] h-[200%] bg-[radial-gradient(circle,rgba(255,255,255,0.1)_0%,transparent_70%)] animate-pulse-bg"></div>
     </div>
 
     <!-- Form -->
-    <div class="form-section">
-        <div class="success-message" id="successMessage">
+    <div class="p-10">
+        <div class="hidden items-center gap-3 bg-gradient-to-br from-green-600 to-green-500 text-white p-4 rounded-lg mb-5" id="successMessage">
             <i class="fas fa-check-circle"></i> Contact saved successfully!
         </div>
 
-        <form th:action="@{/contacts/save}" method="post" class="contact-form" th:object="${contact}">
-            <div class="form-group">
-                <label for="name" class="form-label"><i class="fas fa-user"></i> Full Name *</label>
-                <div style="position:relative;">
-                    <input type="text" id="name" name="name" th:field="*{name}" class="form-input" placeholder="Enter full name" required maxlength="100" />
-                    <i class="fas fa-user form-icon"></i>
+        <form th:action="@{/contacts/save}" method="post" class="flex flex-col gap-6 contact-form" th:object="${contact}">
+            <!-- Name -->
+            <div class="animate-slide-in" style="animation-delay:0.1s">
+                <label for="name" class="block mb-2 text-gray-800 font-semibold text-sm uppercase tracking-wide">
+                    <i class="fas fa-user"></i> Full Name *
+                </label>
+                <div class="relative">
+                    <input type="text" id="name" name="name" th:field="*{name}" placeholder="Enter full name"
+                           maxlength="100" required
+                           class="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl text-base focus:border-blue-500 focus:shadow-lg transition-all outline-none" />
+                    <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
                 </div>
-                <div class="form-hint"><i class="fas fa-info-circle"></i> Required field - Enter the contact's full name</div>
+                <div class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                    <i class="fas fa-info-circle"></i> Required field - Enter the contact's full name
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="email" class="form-label"><i class="fas fa-envelope"></i> Email Address</label>
-                <div style="position:relative;">
-                    <input type="email" id="email" name="email" th:field="*{email}" class="form-input" placeholder="Enter email address" maxlength="150" />
-                    <i class="fas fa-envelope form-icon"></i>
+            <!-- Email -->
+            <div class="animate-slide-in" style="animation-delay:0.2s">
+                <label for="email" class="block mb-2 text-gray-800 font-semibold text-sm uppercase tracking-wide">
+                    <i class="fas fa-envelope"></i> Email Address
+                </label>
+                <div class="relative">
+                    <input type="email" id="email" name="email" th:field="*{email}" placeholder="Enter email address"
+                           maxlength="150"
+                           class="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl text-base focus:border-blue-500 focus:shadow-lg transition-all outline-none" />
+                    <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
                 </div>
-                <div class="form-hint"><i class="fas fa-info-circle"></i> Optional - Valid email format required if provided</div>
+                <div class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                    <i class="fas fa-info-circle"></i> Optional - Valid email format required if provided
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="phone" class="form-label"><i class="fas fa-phone"></i> Phone Number</label>
-                <div style="position:relative;">
-                    <input type="tel" id="phone" name="phone" th:field="*{phone}" class="form-input" placeholder="Enter phone number" maxlength="20" />
-                    <i class="fas fa-phone form-icon"></i>
+            <!-- Phone -->
+            <div class="animate-slide-in" style="animation-delay:0.3s">
+                <label for="phone" class="block mb-2 text-gray-800 font-semibold text-sm uppercase tracking-wide">
+                    <i class="fas fa-phone"></i> Phone Number
+                </label>
+                <div class="relative">
+                    <input type="tel" id="phone" name="phone" th:field="*{phone}" placeholder="Enter phone number"
+                           maxlength="20"
+                           class="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl text-base focus:border-blue-500 focus:shadow-lg transition-all outline-none" />
+                    <i class="fas fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
                 </div>
-                <div class="form-hint"><i class="fas fa-info-circle"></i> Optional - Include country code for international numbers</div>
+                <div class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                    <i class="fas fa-info-circle"></i> Optional - Include country code for international numbers
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="address" class="form-label"><i class="fas fa-map-marker-alt"></i> Address</label>
-                <div style="position:relative;">
-                    <textarea id="address" name="address" th:field="*{address}" class="form-input textarea" placeholder="Enter full address" maxlength="500"></textarea>
-                    <i class="fas fa-map-marker-alt form-icon"></i>
+            <!-- Address -->
+            <div class="animate-slide-in" style="animation-delay:0.4s">
+                <label for="address" class="block mb-2 text-gray-800 font-semibold text-sm uppercase tracking-wide">
+                    <i class="fas fa-map-marker-alt"></i> Address
+                </label>
+                <div class="relative">
+                    <textarea id="address" name="address" th:field="*{address}" placeholder="Enter full address"
+                              maxlength="500"
+                              class="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl text-base focus:border-blue-500 focus:shadow-lg transition-all outline-none resize-y min-h-[120px] leading-relaxed"></textarea>
+                    <i class="fas fa-map-marker-alt absolute left-4 top-6 text-gray-400"></i>
                 </div>
-                <div class="form-hint"><i class="fas fa-info-circle"></i> Optional - Complete address for better contact management</div>
+                <div class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                    <i class="fas fa-info-circle"></i> Optional - Complete address for better contact management
+                </div>
             </div>
 
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary" id="saveBtn">
+            <!-- Actions -->
+            <div class="flex flex-wrap justify-center gap-4 mt-6">
+                <button type="submit" id="saveBtn"
+                        class="btn-primary px-8 py-4 rounded-full text-white font-semibold flex items-center gap-2 justify-center min-w-[150px] bg-gradient-to-br from-blue-500 to-blue-700 hover:from-blue-700 hover:to-blue-500 transition-transform duration-300 hover:-translate-y-1 shadow-lg">
                     <i class="fas fa-save"></i> Save Contact
                 </button>
-                <a href="/contacts" class="btn btn-secondary"><i class="fas fa-times"></i> Cancel</a>
+                <a href="/contacts"
+                   class="px-8 py-4 rounded-full text-white font-semibold flex items-center gap-2 justify-center min-w-[150px] bg-gradient-to-br from-gray-400 to-gray-600 hover:from-gray-600 hover:to-gray-400 transition-transform duration-300 hover:-translate-y-1 shadow-lg">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
             </div>
         </form>
     </div>
@@ -124,10 +145,7 @@
         // Character counters
         function addCharacterCounter(input, maxLength) {
             const counter = document.createElement('span');
-            counter.className = 'character-counter';
-            counter.style.fontSize = '12px';
-            counter.style.color = '#7f8c8d';
-            counter.style.float = 'right';
+            counter.className = 'character-counter text-xs text-gray-500 float-right';
             input.parentElement.appendChild(counter);
             function updateCounter() {
                 const remaining = maxLength - input.value.length;
@@ -143,7 +161,7 @@
         addCharacterCounter(document.getElementById('phone'), 20);
         addCharacterCounter(addressInput, 500);
 
-        // Show loading and success on submit
+        // Show loading and disable button on submit
         form.addEventListener('submit', function() {
             saveBtn.innerHTML = '<div class="loading"></div> Saving...';
             saveBtn.disabled = true;
