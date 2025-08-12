@@ -9,9 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/api/contacts")
@@ -26,7 +24,7 @@ public class ContactController {
     /**
      * List all contacts (with optional search and pagination)
      */
-    @GetMapping
+    @GetMapping("/list")
     public String listContacts(
             @RequestParam(name = "search", required = false) String search,
             @RequestParam(name = "page", defaultValue = "0") int page,
@@ -52,26 +50,29 @@ public class ContactController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveContact(@RequestBody Contact contact) {
+    public String saveContact(
+            @ModelAttribute Contact contact,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+
         try {
             Contact savedContact = contactService.saveContact(contact);
             String message = contact.getId() == null ?
                     "Contact created successfully!" :
                     "Contact updated successfully!";
 
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", message);
-            response.put("contact", savedContact);
-
-            return ResponseEntity.ok(response);
+            redirectAttributes.addFlashAttribute("successMessage", message);
+            return "redirect:/api/contacts/list";
 
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("errorMessage", e.getMessage()));
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("isEdit", contact.getId() != null);
+            return "contacts/form";
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("errorMessage", "An unexpected error occurred while saving the contact."));
+            model.addAttribute("errorMessage", "An unexpected error occurred while saving the contact.");
+            model.addAttribute("isEdit", contact.getId() != null);
+            return "contacts/form";
         }
     }
 
