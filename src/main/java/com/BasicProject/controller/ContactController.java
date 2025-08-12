@@ -92,5 +92,25 @@ public class ContactController {
         }
     }
 
+    /**
+     * Update existing contact
+     */
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateContact(@PathVariable Long id, @RequestBody Contact updatedContact) {
+        try {
+            Contact contact = contactService.updateContact(id, updatedContact);
+            return ResponseEntity.ok(contact); // Returns updated contact as JSON
+
+        } catch (ContactNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An unexpected error occurred while updating the contact.");
+        }
+    }
+
+
+
 
 }

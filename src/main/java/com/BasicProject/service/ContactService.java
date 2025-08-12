@@ -74,4 +74,17 @@ public class ContactService {
 
         contactRepository.deleteById(id);
     }
+
+    public Contact updateContact(Long id, Contact updatedContact) {
+        Contact existingContact = contactRepository.findById(id)
+                .orElseThrow(() -> new ContactNotFoundException("Contact not found with id: " + id));
+
+        // Update only relevant fields
+        existingContact.setName(updatedContact.getName());
+        existingContact.setEmail(updatedContact.getEmail());
+        existingContact.setPhone(updatedContact.getPhone());
+        existingContact.setAddress(updatedContact.getAddress());
+
+        return contactRepository.save(existingContact); // Saves and returns updated contact
+    }
 }
