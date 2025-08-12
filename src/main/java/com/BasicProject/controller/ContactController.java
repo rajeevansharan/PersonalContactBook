@@ -112,6 +112,16 @@ public class ContactController {
         }
     }
 
+    /**
+     * Show add contact form
+     */
+    @GetMapping("/new")
+    public String showAddContactForm(Model model) {
+        model.addAttribute("contact", new Contact());
+        model.addAttribute("isEdit", false);
+        return "contacts/form";
+    }
+
 
 
 
