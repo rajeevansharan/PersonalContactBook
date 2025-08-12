@@ -6,12 +6,14 @@ import com.BasicProject.service.ContactService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("/api/contacts")
 public class ContactController {
 
@@ -25,10 +27,10 @@ public class ContactController {
      * List all contacts (with optional search and pagination)
      */
     @GetMapping
-    public Map<String, Object> listContacts(
+    public String listContacts(
             @RequestParam(name = "search", required = false) String search,
             @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "10") int size) {
+            @RequestParam(name = "size", defaultValue = "10") int size , Model model) {
 
         Page<Contact> contactPage;
 
@@ -38,15 +40,15 @@ public class ContactController {
             contactPage = contactService.getAllContacts(page, size);
         }
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("contacts", contactPage.getContent());
-        response.put("currentPage", page);
-        response.put("totalPages", contactPage.getTotalPages());
-        response.put("totalContacts", contactPage.getTotalElements());
-        response.put("hasNext", contactPage.hasNext());
-        response.put("hasPrevious", contactPage.hasPrevious());
+        model.addAttribute("contacts", contactPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", contactPage.getTotalPages());
+        model.addAttribute("totalContacts", contactPage.getTotalElements());
+        model.addAttribute("hasNext", contactPage.hasNext());
+        model.addAttribute("hasPrevious", contactPage.hasPrevious());
+        model.addAttribute("search", search);
 
-        return response;
+        return "contacts/list";
     }
 
     @PostMapping("/save")
