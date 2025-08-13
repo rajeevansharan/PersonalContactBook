@@ -115,7 +115,7 @@ public class ContactController {
 
 
     /**
-     * Update existing contact
+     * Update existing contact (Simple)
      */
     @PostMapping("/update") // Use POST since it's a form submission
     public String updateContact(
