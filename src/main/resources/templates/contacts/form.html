@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Contact</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom animations that Tailwind doesn't have out of the box */
+        @keyframes pulse-bg {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.1; }
+        }
+        @keyframes bounce-custom {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        @keyframes slideInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes spin-custom {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .animate-pulse-bg { animation: pulse-bg 4s ease-in-out infinite; }
+        .animate-bounce-custom { animation: bounce-custom 2s ease-in-out infinite; }
+        .animate-slide-in { opacity: 0; transform: translateY(20px); animation: slideInUp 0.6s ease forwards; }
+        .loading { display:inline-block; width:20px; height:20px; border:3px solid #f3f3f3; border-top:3px solid #3498db; border-radius:50%; animation:spin-custom 1s linear infinite; }
+    </style>
+</head>
+<body class="font-sans bg-gradient-to-br from-indigo-400 to-purple-600 min-h-screen p-5">
+<div class="max-w-3xl mx-auto bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden">
+    <!-- Header -->
+    <div class="relative bg-gradient-to-br from-gray-800 to-blue-600 p-8 text-white overflow-hidden">
+        <a href="/contacts" class="inline-flex items-center gap-2 text-white/80 hover:text-white text-sm mb-4 transition-transform duration-300 hover:-translate-x-1">
+            <i class="fas fa-arrow-left"></i> Back to Contacts
+        </a>
+        <h1 class="text-3xl font-light flex items-center gap-4 relative z-10">
+            <i class="fas fa-user-plus text-2xl animate-bounce-custom"></i> Add New Contact
+        </h1>
+        <div class="absolute top-[-50%] right-[-50%] w-[200%] h-[200%] bg-[radial-gradient(circle,rgba(255,255,255,0.1)_0%,transparent_70%)] animate-pulse-bg"></div>
+    </div>
+
+    <!-- Form -->
+    <div class="p-10">
+        <div class="hidden items-center gap-3 bg-gradient-to-br from-green-600 to-green-500 text-white p-4 rounded-lg mb-5" id="successMessage">
+            <i class="fas fa-check-circle"></i> Contact saved successfully!
+        </div>
+
+        <form th:action="@{/api/contacts/save}" method="post" class="flex flex-col gap-6 contact-form" th:object="${contact}">
+            <!-- Name -->
+            <div class="animate-slide-in" style="animation-delay:0.1s">
+                <label for="name" class="block mb-2 text-gray-800 font-semibold text-sm uppercase tracking-wide">
+                    <i class="fas fa-user"></i> Full Name *
+                </label>
+                <div class="relative">
+                    <input type="text" id="name" name="name" th:field="*{name}" placeholder="Enter full name"
+                           maxlength="100" required
+                           class="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl text-base focus:border-blue-500 focus:shadow-lg transition-all outline-none" />
+                    <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                </div>
+                <div class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                    <i class="fas fa-info-circle"></i> Required field - Enter the contact's full name
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="animate-slide-in" style="animation-delay:0.2s">
+                <label for="email" class="block mb-2 text-gray-800 font-semibold text-sm uppercase tracking-wide">
+                    <i class="fas fa-envelope"></i> Email Address
+                </label>
+                <div class="relative">
+                    <input type="email" id="email" name="email" th:field="*{email}" placeholder="Enter email address"
+                           maxlength="150"
+                           class="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl text-base focus:border-blue-500 focus:shadow-lg transition-all outline-none" />
+                    <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                </div>
+                <div class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                    <i class="fas fa-info-circle"></i> Optional - Valid email format required if provided
+                </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="animate-slide-in" style="animation-delay:0.3s">
+                <label for="phone" class="block mb-2 text-gray-800 font-semibold text-sm uppercase tracking-wide">
+                    <i class="fas fa-phone"></i> Phone Number
+                </label>
+                <div class="relative">
+                    <input type="tel" id="phone" name="phone" th:field="*{phone}" placeholder="Enter phone number"
+                           maxlength="20"
+                           class="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl text-base focus:border-blue-500 focus:shadow-lg transition-all outline-none" />
+                    <i class="fas fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                </div>
+                <div class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                    <i class="fas fa-info-circle"></i> Optional - Include country code for international numbers
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div class="animate-slide-in" style="animation-delay:0.4s">
+                <label for="address" class="block mb-2 text-gray-800 font-semibold text-sm uppercase tracking-wide">
+                    <i class="fas fa-map-marker-alt"></i> Address
+                </label>
+                <div class="relative">
+                    <textarea id="address" name="address" th:field="*{address}" placeholder="Enter full address"
+                              maxlength="500"
+                              class="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl text-base focus:border-blue-500 focus:shadow-lg transition-all outline-none resize-y min-h-[120px] leading-relaxed"></textarea>
+                    <i class="fas fa-map-marker-alt absolute left-4 top-6 text-gray-400"></i>
+                </div>
+                <div class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                    <i class="fas fa-info-circle"></i> Optional - Complete address for better contact management
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex flex-wrap justify-center gap-4 mt-6">
+                <button type="submit" id="saveBtn"
+                        class="btn-primary px-8 py-4 rounded-full text-white font-semibold flex items-center gap-2 justify-center min-w-[150px] bg-gradient-to-br from-blue-500 to-blue-700 hover:from-blue-700 hover:to-blue-500 transition-transform duration-300 hover:-translate-y-1 shadow-lg">
+                    <i class="fas fa-save"></i> Save Contact
+                </button>
+                <a href="/contacts"
+                   class="px-8 py-4 rounded-full text-white font-semibold flex items-center gap-2 justify-center min-w-[150px] bg-gradient-to-br from-gray-400 to-gray-600 hover:from-gray-600 hover:to-gray-400 transition-transform duration-300 hover:-translate-y-1 shadow-lg">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('.contact-form');
+        const saveBtn = document.getElementById('saveBtn');
+        const successMessage = document.getElementById('successMessage');
+        const addressInput = document.getElementById('address');
+
+        // Auto-resize textarea
+        addressInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+
+        // Character counters
+        function addCharacterCounter(input, maxLength) {
+            const counter = document.createElement('span');
+            counter.className = 'character-counter text-xs text-gray-500 float-right';
+            input.parentElement.appendChild(counter);
+            function updateCounter() {
+                const remaining = maxLength - input.value.length;
+                counter.textContent = `${remaining} characters remaining`;
+                counter.style.color = remaining < 20 ? '#e74c3c' : '#7f8c8d';
+            }
+            input.addEventListener('input', updateCounter);
+            updateCounter();
+        }
+
+        addCharacterCounter(document.getElementById('name'), 100);
+        addCharacterCounter(document.getElementById('email'), 150);
+        addCharacterCounter(document.getElementById('phone'), 20);
+        addCharacterCounter(addressInput, 500);
+
+        // Show loading and disable button on submit
+        form.addEventListener('submit', function() {
+            saveBtn.innerHTML = '<div class="loading"></div> Saving...';
+            saveBtn.disabled = true;
+        });
+    });
+</script>
+</body>
+</html>
