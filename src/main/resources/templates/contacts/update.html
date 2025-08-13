@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacts with Update Feature</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+
+<!-- Contacts Section -->
+<div class="p-10">
+    <!-- Contacts Grid -->
+    <div class="grid gap-6 mb-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" th:if="${contacts != null and !contacts.empty}">
+        <div class="bg-white rounded-xl p-6 shadow hover:-translate-y-1 hover:shadow-2xl border border-gray-100 transition-all relative overflow-hidden"
+             th:each="contact : ${contacts}">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-br from-blue-500 to-purple-500"></div>
+            <div class="flex items-center gap-3 text-xl font-semibold text-gray-800 mb-4">
+                <i class="fas fa-user"></i>
+                <span th:text="${contact.name}">John Doe</span>
+            </div>
+            <div class="flex flex-col gap-3 text-gray-600 text-sm">
+                <div class="flex items-center gap-3" th:if="${contact.email != null and contact.email != ''}">
+                    <i class="fas fa-envelope text-blue-500"></i>
+                    <span class="break-all" th:text="${contact.email}">john.doe@email.com</span>
+                </div>
+                <div class="flex items-center gap-3" th:if="${contact.phone != null and contact.phone != ''}">
+                    <i class="fas fa-phone text-blue-500"></i>
+                    <span class="break-all" th:text="${contact.phone}">+1 234 567 8900</span>
+                </div>
+                <div class="flex items-center gap-3" th:if="${contact.address != null and contact.address != ''}">
+                    <i class="fas fa-map-marker-alt text-blue-500"></i>
+                    <span class="break-all" th:text="${contact.address}">123 Main St, City, State 12345</span>
+                </div>
+            </div>
+            <!-- Action buttons -->
+            <div class="mt-4 flex gap-2">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition flex items-center gap-2"
+                        th:attr="onclick=|openUpdateForm(${contact.id}, '${contact.name}', '${contact.email}', '${contact.phone}', '${contact.address}')|">
+                    <i class="fas fa-edit"></i> Update
+                </button>
+                <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition flex items-center gap-2"
+                        th:attr="onclick=|deleteContact(${contact.id})|">
+                    <i class="fas fa-trash-alt"></i> Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Contact Overlay Form -->
+<div id="updateOverlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl transform transition-all">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-3">
+                <i class="fas fa-edit text-blue-500"></i>
+                Update Contact
+            </h2>
+            <button onclick="closeUpdateForm()" class="text-gray-400 hover:text-gray-600 text-2xl">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Form -->
+        <form id="updateContactForm" onsubmit="updateContact(event)">
+            <input type="hidden" id="contactId" name="contactId">
+
+            <!-- Name Field -->
+            <div class="mb-4">
+                <label for="updateName" class="block text-sm font-medium text-gray-700 mb-2">
+                    <i class="fas fa-user text-gray-400 mr-2"></i>Full Name
+                </label>
+                <input type="text"
+                       id="updateName"
+                       name="name"
+                       required
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                       placeholder="Enter full name">
+            </div>
+
+            <!-- Email Field -->
+            <div class="mb-4">
+                <label for="updateEmail" class="block text-sm font-medium text-gray-700 mb-2">
+                    <i class="fas fa-envelope text-gray-400 mr-2"></i>Email Address
+                </label>
+                <input type="email"
+                       id="updateEmail"
+                       name="email"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                       placeholder="Enter email address">
+            </div>
+
+            <!-- Phone Field -->
+            <div class="mb-4">
+                <label for="updatePhone" class="block text-sm font-medium text-gray-700 mb-2">
+                    <i class="fas fa-phone text-gray-400 mr-2"></i>Phone Number
+                </label>
+                <input type="tel"
+                       id="updatePhone"
+                       name="phone"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                       placeholder="Enter phone number">
+            </div>
+
+            <!-- Address Field -->
+            <div class="mb-6">
+                <label for="updateAddress" class="block text-sm font-medium text-gray-700 mb-2">
+                    <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i>Address
+                </label>
+                <textarea id="updateAddress"
+                          name="address"
+                          rows="3"
+                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
+                          placeholder="Enter address"></textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-3">
+                <button type="submit"
+                        class="flex-1 bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 transition-colors font-medium flex items-center justify-center gap-2">
+                    <i class="fas fa-save"></i>
+                    Update Contact
+                </button>
+                <button type="button"
+                        onclick="closeUpdateForm()"
+                        class="flex-1 bg-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-400 transition-colors font-medium">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Function to open the update form
+    function openUpdateForm(id, name, email, phone, address) {
+        document.getElementById('contactId').value = id;
+        document.getElementById('updateName').value = name || '';
+        document.getElementById('updateEmail').value = email || '';
+        document.getElementById('updatePhone').value = phone || '';
+        document.getElementById('updateAddress').value = address || '';
+
+        document.getElementById('updateOverlay').classList.remove('hidden');
+        // Add smooth animation
+        setTimeout(() => {
+            document.getElementById('updateOverlay').querySelector('.bg-white').classList.add('scale-100', 'opacity-100');
+        }, 10);
+    }
+
+    // Function to close the update form
+    function closeUpdateForm() {
+        document.getElementById('updateOverlay').classList.add('hidden');
+        document.getElementById('updateContactForm').reset();
+    }
+
+    // Function to handle form submission
+    function updateContact(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const contactData = {
+            id: formData.get('contactId'),
+            name: formData.get('name'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            address: formData.get('address')
+        };
+
+        // You can implement your update logic here
+        console.log('Updating contact:', contactData);
+
+        // Example: Send data to server
+        // fetch('/updateContact', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify(contactData)
+        // }).then(response => {
+        //     if (response.ok) {
+        //         closeUpdateForm();
+        //         location.reload(); // Refresh the page to show updated contact
+        //     }
+        // });
+
+        // For demo purposes, just close the form
+        alert('Contact updated successfully!');
+        closeUpdateForm();
+    }
+
+    // Close overlay when clicking outside the form
+    document.getElementById('updateOverlay').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeUpdateForm();
+        }
+    });
+
+    // Your existing delete function (placeholder)
+    function deleteContact(contactId) {
+        if (confirm('Are you sure you want to delete this contact?')) {
+            // Implement your delete logic here
+            console.log('Deleting contact with ID:', contactId);
+        }
+    }
+</script>
+
+</body>
+</html>

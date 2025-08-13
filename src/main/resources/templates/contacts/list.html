@@ -72,9 +72,13 @@
                         <span class="break-all" th:text="${contact.address}">123 Main St, City, State 12345</span>
                     </div>
                 </div>
-                <!-- Delete button -->
-                <div class="mt-4">
-                    <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                <!-- Action buttons -->
+                <div class="mt-4 flex gap-2">
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition flex items-center gap-2"
+                            th:attr="onclick=|openUpdateForm(${contact.id}, '${contact.name}', '${contact.email}', '${contact.phone}', '${contact.address}')|">
+                        <i class="fas fa-edit"></i> Update
+                    </button>
+                    <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition flex items-center gap-2"
                             th:attr="onclick=|deleteContact(${contact.id})|">
                         <i class="fas fa-trash-alt"></i> Delete
                     </button>
@@ -130,9 +134,108 @@
             </span>
         </div>
     </div>
+
+    <div id="updateOverlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl transform transition-all">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-3">
+                    <i class="fas fa-edit text-blue-500"></i>
+                    Update Contact
+                </h2>
+                <button onclick="closeUpdateForm()" class="text-gray-400 hover:text-gray-600 text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Form -->
+            <form id="updateContactForm" onsubmit="updateContact(event)">
+                <input type="hidden" id="contactId" name="contactId">
+
+                <!-- Name Field -->
+                <div class="mb-4">
+                    <label for="updateName" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-user text-gray-400 mr-2"></i>Full Name
+                    </label>
+                    <input type="text"
+                           id="updateName"
+                           name="name"
+                           required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                           placeholder="Enter full name">
+                </div>
+
+                <!-- Email Field -->
+                <div class="mb-4">
+                    <label for="updateEmail" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-envelope text-gray-400 mr-2"></i>Email Address
+                    </label>
+                    <input type="email"
+                           id="updateEmail"
+                           name="email"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                           placeholder="Enter email address">
+                </div>
+
+                <!-- Phone Field -->
+                <div class="mb-4">
+                    <label for="updatePhone" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-phone text-gray-400 mr-2"></i>Phone Number
+                    </label>
+                    <input type="tel"
+                           id="updatePhone"
+                           name="phone"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                           placeholder="Enter phone number">
+                </div>
+
+                <!-- Address Field -->
+                <div class="mb-6">
+                    <label for="updateAddress" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i>Address
+                    </label>
+                    <textarea id="updateAddress"
+                              name="address"
+                              rows="3"
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
+                              placeholder="Enter address"></textarea>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3">
+                    <button type="submit"
+                            class="flex-1 bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 transition-colors font-medium flex items-center justify-center gap-2">
+                        <i class="fas fa-save"></i>
+                        Update Contact
+                    </button>
+                    <button type="button"
+                            onclick="closeUpdateForm()"
+                            class="flex-1 bg-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-400 transition-colors font-medium">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </div>
 
 <script>
+
+    // Function to open the update form
+    function openUpdateForm(id, name, email, phone, address) {
+        document.getElementById('contactId').value = id;
+        document.getElementById('updateName').value = name || '';
+        document.getElementById('updateEmail').value = email || '';
+        document.getElementById('updatePhone').value = phone || '';
+        document.getElementById('updateAddress').value = address || '';
+
+        document.getElementById('updateOverlay').classList.remove('hidden');
+        // Add smooth animation
+        setTimeout(() => {
+            document.getElementById('updateOverlay').querySelector('.bg-white').classList.add('scale-100', 'opacity-100');
+        }, 10);
+    }
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.querySelector('.search-input');
         const searchForm = document.querySelector('.search-form');
