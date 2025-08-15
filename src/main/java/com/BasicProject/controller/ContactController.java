@@ -113,6 +113,32 @@ public class ContactController {
         }
     }
 
+
+    /**
+     * Update existing contact (Simple)
+     */
+    @PostMapping("/update") // Use POST since it's a form submission
+    public String updateContact(
+            @ModelAttribute("contact") Contact updatedContact,
+            RedirectAttributes redirectAttributes) {
+        try {
+            contactService.updateContact(updatedContact.getId(), updatedContact);
+            redirectAttributes.addFlashAttribute("successMessage", "Contact updated successfully!");
+
+            return "redirect:/contact/list";
+
+        } catch (ContactNotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/contact/list";
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "An unexpected error occurred while updating the contact.");
+            return "redirect:/contact/list";
+        }
+    }
+
+
     /**
      * Show add contact form
      */
