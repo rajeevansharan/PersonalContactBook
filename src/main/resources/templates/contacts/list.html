@@ -280,6 +280,33 @@
         }, 100);
     });
 
+    function closeUpdateForm() {
+        const overlay = document.getElementById('updateOverlay');
+        const form = document.getElementById('updateContactForm');
+
+        // Add a fade-out / scale-down animation
+        const modal = overlay.querySelector('.bg-white');
+        modal.classList.remove('scale-100', 'opacity-100');
+        modal.classList.add('opacity-0', 'scale-95');
+
+        // Wait a bit for the animation to finish before hiding
+        setTimeout(() => {
+            overlay.classList.add('hidden');
+            modal.classList.remove('opacity-0', 'scale-95');
+
+            // Reset form
+            if (form) {
+                form.reset();
+                document.getElementById('contactId').value = "";
+            }
+
+            // Redirect after closing
+            window.location.href = "/api/contacts/list";
+        }, 200);
+    }
+
+
+
     function deleteContact(contactId) {
         if (confirm("Are you sure you want to delete this contact?")) {
             fetch(`/api/contacts/delete/${contactId}`, {
@@ -302,7 +329,6 @@
     function updateContact(event) {
         event.preventDefault();
 
-
         const formData = new FormData(event.target);
         const contactData = {
             id: formData.get('contactId'),
@@ -311,32 +337,29 @@
             phone: formData.get('phone'),
             address: formData.get('address')
         };
-        console.log(contactData);
 
-        // Send data to backend
         fetch(`update/${contactData.id}`, {
-            method: 'PUT', // Matches your @PutMapping
-            headers: {
-                'Content-Type': 'application/json' // Tell backend we are sending JSON
-            },
-            body: JSON.stringify(contactData) // Convert JS object to JSON string
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(contactData)
         })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Failed to update contact');
                 }
-                return response.json(); // Parse JSON response from backend
+                return response.json();
             })
             .then(updatedContact => {
                 console.log('Contact updated successfully:', updatedContact);
-                alert('Contact updated successfully!');
-                // Optionally, update the UI with the new contact info
+                // Redirect to home page
+                window.location.href = "/api/contacts/list";
             })
             .catch(error => {
                 console.error('Error:', error);
                 alert('Error updating contact: ' + error.message);
             });
     }
+
 
 </script>
 
