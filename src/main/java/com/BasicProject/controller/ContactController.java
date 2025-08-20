@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/api/contacts")
 public class ContactController {
 
     private final ContactService contactService;
@@ -24,7 +23,7 @@ public class ContactController {
     /**
      * List all contacts (with optional search and pagination)
      */
-    @GetMapping("/list")
+    @GetMapping("/")
     public String listContacts(
             @RequestParam(name = "search", required = false) String search,
             @RequestParam(name = "page", defaultValue = "0") int page,
@@ -62,7 +61,7 @@ public class ContactController {
                     "Contact updated successfully!";
 
             redirectAttributes.addFlashAttribute("successMessage", message);
-            return "redirect:/api/contacts/list";
+            return "redirect:/";
 
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
@@ -126,16 +125,16 @@ public class ContactController {
             contactService.updateContact(updatedContact.getId(), updatedContact);
             redirectAttributes.addFlashAttribute("successMessage", "Contact updated successfully!");
 
-            return "redirect:/contact/list";
+            return "redirect:/";
 
         } catch (ContactNotFoundException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/contact/list";
+            return "redirect:/";
 
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "An unexpected error occurred while updating the contact.");
-            return "redirect:/contact/list";
+            return "redirect:/";
         }
     }
 
