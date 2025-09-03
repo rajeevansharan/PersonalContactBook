@@ -50,7 +50,7 @@
             <i class="fas fa-check-circle"></i> Contact saved successfully!
         </div>
 
-        <form th:action="@{/api/contacts/save}" method="post" class="flex flex-col gap-6 contact-form" th:object="${contact}">
+        <form th:action="@{/save}" method="post" class="flex flex-col gap-6 contact-form" th:object="${contact}">
             <!-- Name -->
             <div class="animate-slide-in" style="animation-delay:0.1s">
                 <label for="name" class="block mb-2 text-gray-800 font-semibold text-sm uppercase tracking-wide">
@@ -121,7 +121,7 @@
                         class="btn-primary px-8 py-4 rounded-full text-white font-semibold flex items-center gap-2 justify-center min-w-[150px] bg-gradient-to-br from-blue-500 to-blue-700 hover:from-blue-700 hover:to-blue-500 transition-transform duration-300 hover:-translate-y-1 shadow-lg">
                     <i class="fas fa-save"></i> Save Contact
                 </button>
-                <a href="/contacts"
+                <a href="/"
                    class="px-8 py-4 rounded-full text-white font-semibold flex items-center gap-2 justify-center min-w-[150px] bg-gradient-to-br from-gray-400 to-gray-600 hover:from-gray-600 hover:to-gray-400 transition-transform duration-300 hover:-translate-y-1 shadow-lg">
                     <i class="fas fa-times"></i> Cancel
                 </a>
