@@ -323,30 +323,22 @@
         }, 100);
     });
 
-    function closeUpdateForm() {
-        const overlay = document.getElementById('updateOverlay');
-        const form = document.getElementById('updateContactForm');
+function closeUpdateForm() {
+    const overlay = document.getElementById('updateOverlay');
+    const modal = overlay.querySelector('.bg-white');
+    const form = document.getElementById('updateContactForm');
 
-        // Add a fade-out / scale-down animation
-        const modal = overlay.querySelector('.bg-white');
-        modal.classList.remove('scale-100', 'opacity-100');
-        modal.classList.add('opacity-0', 'scale-95');
+    // Animate modal out
+    modal.classList.remove('scale-100', 'opacity-100');
+    modal.classList.add('opacity-0', 'scale-95');
 
-        // Wait a bit for the animation to finish before hiding
-        setTimeout(() => {
-            overlay.classList.add('hidden');
-            modal.classList.remove('opacity-0', 'scale-95');
-
-            // Reset form
-            if (form) {
-                form.reset();
-                document.getElementById('contactId').value = "";
-            }
-
-            // Redirect after closing
-            window.location.href = "/";
-        }, 200);
-    }
+    setTimeout(() => {
+        overlay.classList.add('hidden');
+        modal.classList.remove('opacity-0', 'scale-95');
+        form.reset();
+        document.getElementById('contactId').value = "";
+    }, 200);
+}
 
 
 
