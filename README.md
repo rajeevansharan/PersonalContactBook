@@ -282,8 +282,8 @@ This project covers essential Spring Boot concepts:
 ## 👨‍💻 Author
 
 **Your Name**
-- GitHub: [@yourusername](https://github.com/rajeevansharan)
-- LinkedIn: [Your LinkedIn Profile]([https://linkedin.com/in/yourprofile](https://www.linkedin.com/in/rajeevan-sharan-a1565927b/))
+- GitHub: [GithubLink](https://github.com/rajeevansharan)
+- LinkedIn: [LinkedIn Profile]([https://linkedin.com/in/yourprofile](https://www.linkedin.com/in/rajeevan-sharan-a1565927b/))
 - Email: sharan@gmail.com
 
 ⭐ **Star this repository if you find it helpful!**
