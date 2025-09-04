@@ -1,18 +1,26 @@
 # Personal Contact Book 📇
 
-A simple yet comprehensive web application built with Spring Boot for managing personal contacts. This project demonstrates fundamental Spring Boot concepts including MVC architecture, JPA data persistence, Thymeleaf templating, and responsive web design.
+A simple yet comprehensive web application built with **Spring Boot** for managing personal contacts. Demonstrates Spring Boot concepts including MVC architecture, JPA data persistence, Thymeleaf templating, RESTful endpoints, Dockerized deployment,pagination and responsive web design.
 
-![Java](https://img.shields.io/badge/Java-11+-orange)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7+-green)
+![Java](https://img.shields.io/badge/Java-21-orange)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.4-green)
+![Docker](https://img.shields.io/badge/Docker-Enabled-blue)
 ![License](https://img.shields.io/badge/License-MIT-blue)
+
+---
 
 ## 🚀 Features
 
-- **Contact Management**: Create, read, update, and delete contacts
-- **Search Functionality**: Find contacts by name or email with real-time filtering
-- **Responsive Design**: Mobile-friendly interface using Bootstrap
-- **Data Persistence**: Reliable data storage with H2 database
-- **Intuitive UI**: Clean, modern interface with confirmation dialogs
+- **CRUD Operations:** Create, read, update, and delete contacts
+- **Search & Pagination:** Real-time search by name/email with page navigation
+- **RESTful Endpoints:** Supports both HTML form submissions and JSON APIs
+- **Responsive UI:** Mobile-friendly interface using Bootstrap
+- **Data Persistence:** PostgreSQL (production) and H2 (testing)
+- **Environment Variables:** Secure DB configuration via dotenv
+- **Code Generation:** Lombok for cleaner, boilerplate-free code
+- **Dockerized:** Run the app and database in containers using Docker Compose
+
+---
 
 ## 🛠️ Technology Stack
 
@@ -27,17 +35,20 @@ A simple yet comprehensive web application built with Spring Boot for managing p
 | **Build Tool** | Maven |
 | **Java Version** | 21 |
 | **Code Generation** | Lombok |
-| **Configuration** | Environment Variables (dotenv) |
+| **Environment Variables** | Dotenv |
+| **Containerization** | Docker, Docker Compose |
+
+---
 
 ## 📋 Prerequisites
 
-Before running this application, ensure you have:
+- **Java 21**  
+- **Maven 3.6+**  
+- **PostgreSQL 12+**  
+- **Docker & Docker Compose**  
+- **IDE** (IntelliJ IDEA recommended with Lombok plugin)  
 
-- **Java 21** installed
-- **Maven 3.6+** for dependency management
-- **PostgreSQL 12+** database server
-- **Git** for version control
-- **IDE** (IntelliJ IDEA recommended with Lombok plugin)
+---
 
 ## 🔧 Installation & Setup
 
@@ -45,7 +56,7 @@ Before running this application, ensure you have:
 ```bash
 git clone https://github.com/yourusername/personal-contact-book.git
 cd personal-contact-book
-```
+
 
 ### 2. Database Setup
 Create a PostgreSQL database:
@@ -100,9 +111,7 @@ personal-contact-book/
 │   │       ├── templates/
 │   │       │   ├── form.html
 │   │       │   ├── list.html
-│   │       │   ├── fragments/
-│   │       │   │   └── layout.html
-│   │       │   └── index.html
+│   │       │  
 │   │       ├── static/
 │   │       │   ├── css/
 │   │       │   ├── js/
@@ -112,6 +121,8 @@ personal-contact-book/
 │       └── java/
 ├── .env                    # Environment variables (not in git)
 ├── target/
+docker-compose.yml
+Dockerfile
 ├── pom.xml
 ├── README.md
 └── .gitignore
@@ -121,14 +132,12 @@ personal-contact-book/
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/` | Home page with contact list |
-| `GET` | `/contacts` | View all contacts |
-| `GET` | `/contacts/new` | Display add contact form |
-| `POST` | `/contacts` | Create new contact |
-| `GET` | `/contacts/{id}/edit` | Display edit contact form |
-| `POST` | `/contacts/{id}` | Update existing contact |
-| `GET` | `/contacts/{id}/delete` | Delete contact |
-| `GET` | `/contacts/search` | Search contacts by name/email |
+| `GET` | `/` | List all contacts with pagination and optional search |
+| `GET` | `/new` | Display add contact form |
+| `POST` | `/save` | Create or update contact (form submission) |
+| `POST` | `/update` | Update contact (simple form submission |
+| `PUT` | `/update/{id}` | Update existing contact |
+| `DELETE` | `/delete/{id}` | Delete contact |
 
 ## 💾 Database Configuration
 
@@ -273,8 +282,8 @@ This project covers essential Spring Boot concepts:
 ## 👨‍💻 Author
 
 **Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your LinkedIn Profile](https://linkedin.com/in/yourprofile)
-- Email: your.email@example.com
+- GitHub: [@yourusername](https://github.com/rajeevansharan)
+- LinkedIn: [Your LinkedIn Profile]([https://linkedin.com/in/yourprofile](https://www.linkedin.com/in/rajeevan-sharan-a1565927b/))
+- Email: sharan@gmail.com
 
 ⭐ **Star this repository if you find it helpful!**
