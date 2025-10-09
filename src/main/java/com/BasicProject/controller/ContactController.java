@@ -3,11 +3,13 @@ package com.BasicProject.controller;
 import com.BasicProject.exception.ContactNotFoundException;
 import com.BasicProject.model.Contact;
 import com.BasicProject.service.ContactService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -49,10 +51,9 @@ public class ContactController {
     }
 
     @PostMapping("/save")
-    public String saveContact(
-            @ModelAttribute Contact contact,
+    public String saveContact(@Valid @ModelAttribute Contact contact, BindingResult bindingResult,
             Model model,
-            RedirectAttributes redirectAttributes) {
+                              RedirectAttributes redirectAttributes) {
 
         try {
             Contact savedContact = contactService.saveContact(contact);
